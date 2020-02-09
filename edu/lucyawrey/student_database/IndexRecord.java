@@ -6,4 +6,9 @@ package edu.lucyawrey.student_database;
 public class IndexRecord {
   public String key;
   public int location;
+
+  public IndexRecord(String key, int location) {
+    this.key = key;
+    this.location = location;
+  }
 }

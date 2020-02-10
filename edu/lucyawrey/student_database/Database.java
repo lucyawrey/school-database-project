@@ -26,15 +26,23 @@ public class DataBase {
     deleteStack = new Stack(size);
     scanner = new Scanner(System.in);
 
-    StudentRecord[] initialData = getRecordsFromFile("data.txt", size);
-    if (initialData != null) {
-      for (int i = 0; i < initialData.length; i++) {
-        StudentRecord record = initialData[i];
-        databaseArray[i] = record;
-        idIndex.insert(new IndexRecord(record.id, i));
-        firstNameIndex.insert(new IndexRecord(record.firstName, i));
-        lastNameIndex.insert(new IndexRecord(record.lastName, i));
+    try {
+      Scanner fileIn = new Scanner(new File("data.txt"));
+      int i = 0;
+      while (fileIn.hasNextLine()) {
+        String line = fileIn.nextLine();
+        String[] tokens = line.split(" ");
+        databaseArray[i] = new StudentRecord(tokens[2], tokens[1], tokens[0]);
+        idIndex.insert(new IndexRecord(tokens[2], i));
+        firstNameIndex.insert(new IndexRecord(tokens[1], i));
+        lastNameIndex.insert(new IndexRecord(tokens[0], i));
+        i++;
       }
+
+      fileIn.close();
+    } catch(Exception e) {
+      e.printStackTrace();
+      System.out.println("\nSkipping initial data!");
     }
   }
 
@@ -81,10 +89,10 @@ public class DataBase {
   }
 
   public void addIt() {
-    System.out.println("Enter student record in the format '{id} {firstName} {lastName}:'");
+    System.out.println("Enter student record in the format '{lastName} {firstName} {id}'");
     String line = scanner.nextLine();
     String[] tokens = line.split(" ");
-    boolean success = insert(tokens[0], tokens[1], tokens[2]);
+    boolean success = insert(tokens[2], tokens[1], tokens[0]);
     if (success) {
       System.out.println("Added student record");
     } else {
@@ -108,7 +116,8 @@ public class DataBase {
     String token = scanner.next();
     StudentRecord record = search(token);
     if (record != null) {
-      System.out.println("Retrieved record:" + record.id + ": " + record.lastName + ", " + record.firstName);
+      System.out.println("Got record");
+      System.out.println("Last: "+ record.lastName + ", First: " + record.firstName + ", ID: " + record.id);
     } else {
       System.out.println("ID not found");
     }
@@ -136,37 +145,17 @@ public class DataBase {
 
   public void ListByFirstDescending() {
     System.out.println("Listing entire database in descening order by first name...");
-    listDescending(idIndex);
+    listDescending(firstNameIndex);
   }
 
   public void ListByLastDescending() {
     System.out.println("Listing entire database in descening order by last name...");
-    listDescending(idIndex);
-  }
-
-  private StudentRecord[] getRecordsFromFile(String fileName, int size) {
-    try {
-      File file = new File(fileName);
-      Scanner scanner = new Scanner(file);
-      StudentRecord[] records = new StudentRecord[size];
-      
-      for (int i = 0; scanner.hasNextLine(); i++) {
-        String line = scanner.nextLine();
-        String[] tokens = line.split(" ");
-        records[i] = new StudentRecord(tokens[0], tokens[1], tokens[2]);
-      }
-
-      scanner.close();
-      return records;
-    } catch(Exception e) {
-      System.out.println("File not found, skipping initial data!");
-      return null;
-    }
+    listDescending(lastNameIndex);
   }
 
   private void printEntry(int location) {
     StudentRecord record = databaseArray[location];
-    System.out.println(record.id + ": " + record.lastName + ", " + record.firstName);
+    System.out.println("Last: "+ record.lastName + ", First: " + record.firstName + ", ID: " + record.id);
   }
 
   private void listAscending(OrderedArray array) {

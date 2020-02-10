@@ -4,10 +4,10 @@ Fazekas Nicholas 31100
 Prezioso Stefano 22223
 Puvvada Mohana 11224
 Ravikumar Rakhi 11226
-Salyers Matthew 11227 
+Salyers Matthew 11227
 Gillespie William 49587
-Hess Caleb 29282 
-Armatis Jared 34512 
+Hess Caleb 29282
+Armatis Jared 34512
 Beckman Allan 35176
 Wang Zhen 22113
 Wingett Jordan 12345
@@ -24,8 +24,8 @@ McCarty Amanda 44223
 Moldovan Gregory 44335
 Oshiyoye Adekunle 44556
 Pagalos Frank 33112
-Perski Zackery 33221 
-Saunders Jordan 77556 
-Simpson Ashlynne 77665 
-Szalai Kyle 33112 
-Witting Robert 21354 
+Perski Zackery 33221
+Saunders Jordan 77556
+Simpson Ashlynne 77665
+Szalai Kyle 33112
+Witting Robert 21354

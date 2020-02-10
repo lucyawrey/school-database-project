@@ -16,20 +16,20 @@ public class OrderedArray {
     if (last == -1) {
       array[0] = newRecord;
       last++;
+      return;
     }
 
     for (int i = 0; i <= last; i++) {
       int comp = newRecord.compareTo(array[i]);
-      if (comp == 0) {
-        return;
-      } else if (comp > 0) {
+      if (comp > 0) {
         continue;
-      } else if (comp < 0) {
+      } else {
         for (int j = last; j >= i; j--) {
           array[j + 1] = array[j];
         }
         last++;
         array[i] = newRecord;
+        return;
       }
     }
   }
@@ -45,23 +45,28 @@ public class OrderedArray {
   public int search(String key) {
     int start = 0;
     int end = last;
-    int mid, comp;
-    while(start != end) {
-      mid = (end - start) / 2;
-      comp = key.compareTo(array[mid].key);
+    while(start <= end) {
+      int mid = 1 + (end - start) / 2;
+      int comp = key.compareTo(array[mid].key);
       if (comp == 0) {
         return mid;
       } else if (comp > 0){
-        start = mid;
+        start = mid + 1;
       } else if (comp < 0) {
-        end = mid;
+        end = mid - 1;
       }
     }
     return -1;
   }
 
   public int getValue(String key) {
-    return array[search(key)].location;
+    int ref = search(key);
+    if (ref != -1) {
+      IndexRecord record = array[ref];
+      return record.location;
+    } else {
+      return -1;
+    }
   }
 
   public boolean containsKey(String key) {

@@ -11,4 +11,8 @@ public class IndexRecord {
     this.key = key;
     this.location = location;
   }
+
+  public int compareTo(IndexRecord other) {
+    return key.compareTo(other.key);
+  }
 }

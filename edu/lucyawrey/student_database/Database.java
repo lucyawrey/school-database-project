@@ -20,8 +20,11 @@ public class Database {
     deleteStack = new Stack(size);
 
     for (int i = 0; i < initialData.length; i++) {
-      databaseArray[i] = initialData[i];
-      
+      StudentRecord record = initialData[i];
+      databaseArray[i] = record;
+      idIndex.insert(new IndexRecord(record.id, i));
+      firstNameIndex.insert(new IndexRecord(record.firstName, i));
+      lastNameIndex.insert(new IndexRecord(record.lastName, i));
     }
   }
 }

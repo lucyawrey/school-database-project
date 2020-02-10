@@ -34,7 +34,7 @@ public class OrderedArray {
     }
   }
 
-  public void remove(String key) {
+  public void delete(String key) {
     int location = search(key);
     for (int i = location; i >= last; i++) {
       array[i] = array[i + 1];
@@ -58,6 +58,10 @@ public class OrderedArray {
       }
     }
     return -1;
+  }
+
+  public int getValue(String key) {
+    return array[search(key)].location;
   }
 
   public void iteratorInitFront() {

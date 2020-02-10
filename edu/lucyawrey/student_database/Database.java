@@ -2,6 +2,7 @@ package edu.lucyawrey.student_database;
 
 // Student database object
 public class Database {
+  private int insertPointer;
   private StudentRecord[] databaseArray;
   private OrderedArray idIndex;
   private OrderedArray firstNameIndex;
@@ -13,6 +14,7 @@ public class Database {
   }
 
   public Database(StudentRecord[] initialData, int size) {
+    insertPointer = 0;
     databaseArray = new StudentRecord[size];
     idIndex = new OrderedArray(size);
     firstNameIndex = new OrderedArray(size);
@@ -26,5 +28,45 @@ public class Database {
       firstNameIndex.insert(new IndexRecord(record.firstName, i));
       lastNameIndex.insert(new IndexRecord(record.lastName, i));
     }
+  }
+
+  public void insertIt(String id, String firstName, String lastName) {
+    int location;
+    if (deleteStack.hasNext()) {
+      location = deleteStack.pop();
+    } else {
+      location = insertPointer;
+      insertPointer++;
+    }
+    databaseArray[location] = new StudentRecord(id, firstName, lastName);
+    idIndex.insert(new IndexRecord(id, location));
+    firstNameIndex.insert(new IndexRecord(firstName, location));
+    lastNameIndex.insert(new IndexRecord(lastName, location));
+  }
+
+  private StudentRecord search(String key, OrderedArray array) {
+    int location = array.getValue(key);
+    return databaseArray[location];
+  }
+
+  public StudentRecord searchById(String id) {
+    return search(id, idIndex);
+  }
+
+  public StudentRecord searchByFirstName(String firstName) {
+    return search(firstName, firstNameIndex);
+  }
+
+  public StudentRecord searchByLastName(String lastName) {
+    return search(lastName, lastNameIndex);
+  }
+
+  public void delete(String id) {
+    int location = idIndex.getValue(id);
+    StudentRecord record = databaseArray[location];
+    idIndex.delete(id);
+    firstNameIndex.delete(record.firstName);
+    lastNameIndex.delete(record.lastName);
+    deleteStack.push(location);
   }
 }

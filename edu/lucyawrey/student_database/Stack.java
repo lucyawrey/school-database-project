@@ -23,4 +23,8 @@ public class Stack {
   public int peek() {
     return stackArray[stackPointer - 1];
   }
+
+  public boolean hasNext() {
+    return (stackPointer > 0);
+  }
 }

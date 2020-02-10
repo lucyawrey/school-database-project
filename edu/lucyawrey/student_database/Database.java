@@ -1,7 +1,7 @@
 package edu.lucyawrey.student_database;
 
 // Student database object
-public class Database {
+public class DataBase {
   private int insertPointer;
   private StudentRecord[] databaseArray;
   private OrderedArray idIndex;
@@ -9,11 +9,11 @@ public class Database {
   private OrderedArray lastNameIndex;
   private Stack deleteStack;
 
-  public Database(int size) {
-    this(new StudentRecord[0], size);
+  public DataBase() {
+    this(100);
   }
 
-  public Database(StudentRecord[] initialData, int size) {
+  public DataBase(int size) {
     insertPointer = 0;
     databaseArray = new StudentRecord[size];
     idIndex = new OrderedArray(size);
@@ -30,7 +30,11 @@ public class Database {
     }
   }
 
-  public void insertIt(String id, String firstName, String lastName) {
+  public void insert(String id, String firstName, String lastName) {
+    if (idIndex.containsKey(id)) {
+      return;
+    }
+
     int location;
     if (deleteStack.hasNext()) {
       location = deleteStack.pop();
@@ -44,21 +48,9 @@ public class Database {
     lastNameIndex.insert(new IndexRecord(lastName, location));
   }
 
-  private StudentRecord search(String key, OrderedArray array) {
-    int location = array.getValue(key);
+  public StudentRecord search(String id) {
+    int location = idIndex.getValue(id);
     return databaseArray[location];
-  }
-
-  public StudentRecord searchById(String id) {
-    return search(id, idIndex);
-  }
-
-  public StudentRecord searchByFirstName(String firstName) {
-    return search(firstName, firstNameIndex);
-  }
-
-  public StudentRecord searchByLastName(String lastName) {
-    return search(lastName, lastNameIndex);
   }
 
   public void delete(String id) {
@@ -68,5 +60,60 @@ public class Database {
     firstNameIndex.delete(record.firstName);
     lastNameIndex.delete(record.lastName);
     deleteStack.push(location);
+  }
+
+  private void printEntry(int location) {
+    StudentRecord record = databaseArray[location];
+    System.out.println(record.id + ": " + record.lastName + ", " + record.firstName);
+  }
+
+  private void listAscending(OrderedArray array) {
+    array.iteratorInitFront();
+    while (array.hasNext()) {
+      printEntry(array.getNext());
+    }
+  }
+
+  private void listDescending(OrderedArray array) {
+    array.iteratorInitBack();
+    while (array.hasPrevious()) {
+      printEntry(array.getPrevious());
+    }
+  }
+
+  public void addIt() {
+
+  }
+
+  public void deleteIt() {
+
+  }
+
+  public void findIt() {
+
+  }
+
+  public void ListByIDAscending() {
+    listAscending(idIndex);
+  }
+
+  public void ListByFirstAscending() {
+    listAscending(firstNameIndex);
+  }
+
+  public void ListByLastAscending() {
+    listAscending(lastNameIndex);
+  }
+
+  public void ListByIDDescending() {
+    listDescending(idIndex);
+  }
+
+  public void ListByFirstDescending() {
+    listDescending(idIndex);
+  }
+
+  public void ListByLastDescending() {
+    listDescending(idIndex);
   }
 }

@@ -64,6 +64,10 @@ public class OrderedArray {
     return array[search(key)].location;
   }
 
+  public boolean containsKey(String key) {
+    return (search(key) != -1);
+  }
+
   public void iteratorInitFront() {
     iterator = 0;
   }

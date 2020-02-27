@@ -46,7 +46,7 @@ public class OrderedArray {
     int start = 0;
     int end = last;
     while(start <= end) {
-      int mid = 1 + (end - start) / 2;
+      int mid = start + (end - start) / 2;
       int comp = key.compareTo(array[mid].key);
       if (comp == 0) {
         return mid;

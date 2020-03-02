@@ -3,7 +3,7 @@ package edu.lucyawrey.student_database;
 import java.io.File;
 import java.util.Scanner;
 
-// Student database object
+// Student DataBase class, all of the databsase functionality is contained within this class.
 public class DataBase {
   private int insertPointer;
   private StudentRecord[] databaseArray;
@@ -13,10 +13,12 @@ public class DataBase {
   private Stack deleteStack;
   private Scanner scanner;
 
+  // Default constructor passes default size to main constructor.
   public DataBase() {
     this(100);
   }
 
+  // Main constructor for the DataBase that sets all initial values and reads initial data
   public DataBase(int size) {
     insertPointer = 0;
     databaseArray = new StudentRecord[size];
@@ -26,6 +28,7 @@ public class DataBase {
     deleteStack = new Stack(size);
     scanner = new Scanner(System.in);
 
+    // Reads in default data from external file data.txt
     try {
       Scanner fileIn = new Scanner(new File("data.txt"));
       int i = 0;
@@ -46,6 +49,7 @@ public class DataBase {
     }
   }
 
+  // Inserts a new database item. The item is only added if it has a unique key.
   public boolean insert(String id, String firstName, String lastName) {
     if (idIndex.containsKey(id)) {
       return false;
@@ -59,12 +63,16 @@ public class DataBase {
       insertPointer++;
     }
     databaseArray[location] = new StudentRecord(id, firstName, lastName);
+
+    // Adds new item to each of the indexes
     idIndex.insert(new IndexRecord(id, location));
     firstNameIndex.insert(new IndexRecord(firstName, location));
     lastNameIndex.insert(new IndexRecord(lastName, location));
+    
     return true;
   }
 
+  // Search for and return a student record by ID
   public StudentRecord search(String id) {
     int location = idIndex.getValue(id);
     if (location != -1) {
@@ -74,6 +82,7 @@ public class DataBase {
     }
   }
 
+  // Delete a student record by removing it from the indexes and adding its location to the delete stack
   public boolean delete(String id) {
     int location = idIndex.getValue(id);
     if (location != -1) {
@@ -88,6 +97,7 @@ public class DataBase {
     }
   }
 
+  // Interactive method called by the driver program to add new database items
   public void addIt() {
     System.out.println("Enter student record in the format '{lastName} {firstName} {id}'");
     String line = scanner.nextLine();
@@ -100,6 +110,7 @@ public class DataBase {
     }
   }
 
+  // Interactive function called by the driver program to delete a database items
   public void deleteIt() {
     System.out.println("Enter ID of record to delete:");
     String token = scanner.next();
@@ -111,6 +122,7 @@ public class DataBase {
     }
   }
 
+  // Interactive function called by the driver program to search for a database item by ID
   public void findIt() {
     System.out.println("Enter ID of record to look up:");
     String token = scanner.next();
@@ -123,6 +135,11 @@ public class DataBase {
     }
   }
 
+  /* 
+   * Interactive functions called by the driver program to list all database
+   * items is various different ways (ascending and descending lists sorted
+   * by each of the three possible fields.
+  */
   public void ListByIDAscending() {
     System.out.println("Listing entire database in ascending order by ID...");
     listAscending(idIndex);
@@ -153,11 +170,6 @@ public class DataBase {
     listDescending(lastNameIndex);
   }
 
-  private void printEntry(int location) {
-    StudentRecord record = databaseArray[location];
-    System.out.println("Last: "+ record.lastName + ", First: " + record.firstName + ", ID: " + record.id);
-  }
-
   private void listAscending(OrderedArray array) {
     array.iteratorInitFront();
     while (array.hasNext()) {
@@ -170,5 +182,11 @@ public class DataBase {
     while (array.hasPrevious()) {
       printEntry(array.getPrevious());
     }
+  }
+
+  // Helper function to print a single database entry
+  private void printEntry(int location) {
+    StudentRecord record = databaseArray[location];
+    System.out.println("Last: "+ record.lastName + ", First: " + record.firstName + ", ID: " + record.id);
   }
 }

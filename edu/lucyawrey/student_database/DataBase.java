@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class DataBase {
   private int insertPointer;
   private StudentRecord[] databaseArray;
-  private OrderedList<IndexRecord<String>> idIndex, firstNameIndex, lastNameIndex;
+  private OrderedList idIndex, firstNameIndex, lastNameIndex;
   private Stack<Integer> deleteStack;
   private Scanner scanner;
 
@@ -21,9 +21,9 @@ public class DataBase {
   public DataBase(int size) {
     insertPointer = 0;
     databaseArray = new StudentRecord[size];
-    idIndex = new OrderedList<IndexRecord<String>>();
-    firstNameIndex = new OrderedList<IndexRecord<String>>();
-    lastNameIndex = new OrderedList<IndexRecord<String>>();
+    idIndex = new OrderedList();
+    firstNameIndex = new OrderedList();
+    lastNameIndex = new OrderedList();
     deleteStack = new Stack<Integer>();
     scanner = new Scanner(System.in);
 
@@ -171,14 +171,14 @@ public class DataBase {
     listDescending(lastNameIndex);
   }
 
-  private void listAscending(OrderedList<IndexRecord<String>> list) {
+  private void listAscending(OrderedList list) {
     list.iteratorInitFront();
     while (list.hasNext()) {
       printEntry(list.getNext());
     }
   }
 
-  private void listDescending(OrderedList<IndexRecord<String>> List) {
+  private void listDescending(OrderedList List) {
     List.iteratorInitBack();
     while (List.hasPrevious()) {
       printEntry(List.getPrevious());

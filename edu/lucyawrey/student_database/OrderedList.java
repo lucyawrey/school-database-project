@@ -4,6 +4,7 @@ package edu.lucyawrey.student_database;
 public class OrderedList<T extends Comparable<T>> {
   private Node<IndexRecord<T>> first, last, rover, iterator;
 
+  // Insert a node into the linked list sorted using a rover
   public void insert(IndexRecord<T> newRecord) {
     Node<IndexRecord<T>> newNode = new Node<IndexRecord<T>>(newRecord);
     if (first == null) {
@@ -15,22 +16,19 @@ public class OrderedList<T extends Comparable<T>> {
       first = newNode;
     } else {
       rover = first;
-      while (rover.next != null) {
-        if (rover.next.value.compareTo(newNode.value) < 0) {
-          rover = rover.next;
-          continue;
-        } else {
-          newNode.next = rover.next;
-          if (rover.next != null) {
-            newNode.next.prev = newNode;
-          } else {
-            last = newNode;
-          }
-          rover.next = newNode;
-          newNode.prev = rover;
-          return;
-        }
+
+      while (rover.next != null && rover.next.value.compareTo(newNode.value) < 0) {
+        rover = rover.next;
       }
+
+      newNode.next = rover.next;
+      if (rover.next != null) {
+        newNode.next.prev = newNode;
+      } else {
+        last = newNode;
+      }
+      rover.next = newNode;
+      newNode.prev = rover;
     }
   }
 
@@ -39,7 +37,14 @@ public class OrderedList<T extends Comparable<T>> {
     Node<IndexRecord<T>> node = search(key);
     if (node == last) {
       last = node.prev;
-      last.next = null;
+      if (last == null) {
+        first = null;
+      } else {
+        last.next = null; 
+      }
+    } else if (node == first) {
+      first = node.next;
+      first.prev = null;
     } else {
       node.prev.next = node.next;
       node.next.prev = node.prev;
@@ -84,20 +89,22 @@ public class OrderedList<T extends Comparable<T>> {
   }
 
   public boolean hasNext() {
-    return (iterator.next != null);
+    return (iterator != null);
   }
 
   public boolean hasPrevious() {
-    return (iterator.prev != null);
+    return (iterator != null);
   }
 
   public int getNext() {
+    int temp = iterator.value.location;
     iterator = iterator.next;
-    return iterator.prev.value.location;
+    return temp;
   }
 
   public int getPrevious() {
+    int temp = iterator.value.location;
     iterator = iterator.prev;
-    return iterator.next.value.location;
+    return temp;
   }
 }

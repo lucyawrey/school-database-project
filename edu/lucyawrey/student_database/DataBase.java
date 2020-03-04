@@ -31,15 +31,10 @@ public class DataBase {
     // Reads in default data from external file data.txt
     try {
       Scanner fileIn = new Scanner(new File("data.txt"));
-      int i = 0;
       while (fileIn.hasNextLine()) {
         String line = fileIn.nextLine();
         String[] tokens = line.split(" ");
-        databaseArray[i] = new StudentRecord(Integer.parseInt(tokens[2]), tokens[1], tokens[0]);
-        idIndex.insert(new IndexRecord<Integer>(Integer.parseInt(tokens[2]), i));
-        firstNameIndex.insert(new IndexRecord<String>(tokens[1], i));
-        lastNameIndex.insert(new IndexRecord<String>(tokens[0], i));
-        i++;
+        insert(Integer.parseInt(tokens[2]), tokens[1], tokens[0]);
       }
 
       fileIn.close();
@@ -88,7 +83,7 @@ public class DataBase {
     int location = idIndex.getValue(id);
     if (location != -1) {
       StudentRecord record = databaseArray[location];
-      idIndex.delete(id);
+      idIndex.delete(record.id);
       firstNameIndex.delete(record.firstName);
       lastNameIndex.delete(record.lastName);
       deleteStack.push(location);
@@ -102,6 +97,9 @@ public class DataBase {
   public void addIt() {
     System.out.println("Enter student record in the format '{lastName} {firstName} {id}'");
     String line = scanner.nextLine();
+    while(line.isEmpty()) {
+      line = scanner.nextLine();
+    }
     String[] tokens = line.split(" ");
     boolean success = insert(Integer.parseInt(tokens[2]), tokens[1], tokens[0]);
     if (success) {
@@ -179,10 +177,10 @@ public class DataBase {
     }
   }
 
-  private <T extends Comparable<T>> void listDescending(OrderedList<T> List) {
-    List.iteratorInitBack();
-    while (List.hasPrevious()) {
-      printEntry(List.getPrevious());
+  private <T extends Comparable<T>> void listDescending(OrderedList<T> list) {
+    list.iteratorInitBack();
+    while (list.hasPrevious()) {
+      printEntry(list.getPrevious());
     }
   }
 

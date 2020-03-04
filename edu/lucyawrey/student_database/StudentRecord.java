@@ -1,8 +1,10 @@
 package edu.lucyawrey.student_database;
 
-// Student record class used by the main database array.
-// I have used public variables here as getters and setters
-// are overkill for what is essentially a struct
+/* 
+ * Student record class used to store complete student records 
+ * in the database. I have used public variables here because getters
+ * and setters are overkill for what is essentially a simple struct.
+ */
 public class StudentRecord {
   public String id;
   public String firstName;

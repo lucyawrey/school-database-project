@@ -26,6 +26,7 @@ public class Stack<T> {
     return top.value;
   }
 
+  // Check that the stack contains any items
   public boolean hasNext() {
     return (top != null);
   }

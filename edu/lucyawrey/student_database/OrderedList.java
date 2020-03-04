@@ -27,6 +27,7 @@ public class OrderedList<T extends Comparable<T>> {
     }
   }
 
+  // Delete an element from the array and shift all elments back by one
   public void delete(String key) {
     int location = search(key);
     for (int i = location; i >= last; i++) {
@@ -35,11 +36,12 @@ public class OrderedList<T extends Comparable<T>> {
     last--;
   }
 
+  // Do a binary search through the ordered array
   public int search(String key) {
     int start = 0;
     int end = last;
     while (start <= end) {
-      int mid = 1 + (end - start) / 2;
+      int mid = start + (end - start) / 2;
       int comp = key.compareTo(array[mid].key);
       if (comp == 0) {
         return mid;
@@ -52,6 +54,7 @@ public class OrderedList<T extends Comparable<T>> {
     return -1;
   }
 
+  // Get the value of the index record found using search
   public int getValue(String key) {
     int ref = search(key);
     if (ref != -1) {
@@ -62,10 +65,14 @@ public class OrderedList<T extends Comparable<T>> {
     }
   }
 
+  // Checks if the array contains a specific key by doing a search and making sure
+  // it
+  // returns a result
   public boolean containsKey(String key) {
     return (search(key) != -1);
   }
 
+  // Iterator functions for iterating over elements of the array
   public void iteratorInitFront() {
     iterator = 0;
   }

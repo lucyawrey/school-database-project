@@ -20,8 +20,10 @@ public class OrderedList {
         rover = rover.next;
         continue;
       } else {
-
-        rover.prev.next = rover;
+        rover.prev.next = newNode;
+        newNode.prev = rover.prev;
+        rover.prev = newNode;
+        newNode.next = rover;
         return;
       }
     }
@@ -30,8 +32,13 @@ public class OrderedList {
   // Delete an element from the array and shift all elments back by one
   public void delete(String key) {
     Node<IndexRecord<String>> node = search(key);
-    node.prev.next = node.next;
-    node.next.prev = node.prev;
+    if (node == last) {
+      last = node.prev;
+      last.next = null;
+    } else {
+      node.prev.next = node.next;
+      node.next.prev = node.prev;
+    }
   }
 
   // Do a linear search through the ordered list

@@ -66,8 +66,7 @@ public class OrderedList<T extends Comparable<T>> {
   }
 
   // Checks if the array contains a specific key by doing a search and making sure
-  // it
-  // returns a result
+  // it returns a result
   public boolean containsKey(String key) {
     return (search(key) != -1);
   }

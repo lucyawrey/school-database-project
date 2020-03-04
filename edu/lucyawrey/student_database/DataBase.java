@@ -7,25 +7,24 @@ import java.util.Scanner;
 public class DataBase {
   private int insertPointer;
   private StudentRecord[] databaseArray;
-  private OrderedArray idIndex;
-  private OrderedArray firstNameIndex;
-  private OrderedArray lastNameIndex;
-  private Stack deleteStack;
+  private OrderedList<IndexRecord<String>> idIndex, firstNameIndex, lastNameIndex;
+  private Stack<Integer> deleteStack;
   private Scanner scanner;
 
   // Default constructor passes default size to main constructor.
   public DataBase() {
-    this(100);
+    this(200);
   }
 
-  // Main constructor for the DataBase that sets all initial values and reads initial data
+  // Main constructor for the DataBase that sets all initial values and reads
+  // initial data
   public DataBase(int size) {
     insertPointer = 0;
     databaseArray = new StudentRecord[size];
-    idIndex = new OrderedArray(size);
-    firstNameIndex = new OrderedArray(size);
-    lastNameIndex = new OrderedArray(size);
-    deleteStack = new Stack(size);
+    idIndex = new OrderedList<IndexRecord<String>>();
+    firstNameIndex = new OrderedList<IndexRecord<String>>();
+    lastNameIndex = new OrderedList<IndexRecord<String>>();
+    deleteStack = new Stack<Integer>();
     scanner = new Scanner(System.in);
 
     // Reads in default data from external file data.txt
@@ -36,14 +35,14 @@ public class DataBase {
         String line = fileIn.nextLine();
         String[] tokens = line.split(" ");
         databaseArray[i] = new StudentRecord(tokens[2], tokens[1], tokens[0]);
-        idIndex.insert(new IndexRecord(tokens[2], i));
-        firstNameIndex.insert(new IndexRecord(tokens[1], i));
-        lastNameIndex.insert(new IndexRecord(tokens[0], i));
+        idIndex.insert(new IndexRecord<String>(tokens[2], i));
+        firstNameIndex.insert(new IndexRecord<String>(tokens[1], i));
+        lastNameIndex.insert(new IndexRecord<String>(tokens[0], i));
         i++;
       }
 
       fileIn.close();
-    } catch(Exception e) {
+    } catch (Exception e) {
       e.printStackTrace();
       System.out.println("\nSkipping initial data!");
     }
@@ -65,10 +64,10 @@ public class DataBase {
     databaseArray[location] = new StudentRecord(id, firstName, lastName);
 
     // Adds new item to each of the indexes
-    idIndex.insert(new IndexRecord(id, location));
-    firstNameIndex.insert(new IndexRecord(firstName, location));
-    lastNameIndex.insert(new IndexRecord(lastName, location));
-    
+    idIndex.insert(new IndexRecord<String>(id, location));
+    firstNameIndex.insert(new IndexRecord<String>(firstName, location));
+    lastNameIndex.insert(new IndexRecord<String>(lastName, location));
+
     return true;
   }
 
@@ -82,7 +81,8 @@ public class DataBase {
     }
   }
 
-  // Delete a student record by removing it from the indexes and adding its location to the delete stack
+  // Delete a student record by removing it from the indexes and adding its
+  // location to the delete stack
   public boolean delete(String id) {
     int location = idIndex.getValue(id);
     if (location != -1) {
@@ -122,24 +122,25 @@ public class DataBase {
     }
   }
 
-  // Interactive function called by the driver program to search for a database item by ID
+  // Interactive function called by the driver program to search for a database
+  // item by ID
   public void findIt() {
     System.out.println("Enter ID of record to look up:");
     String token = scanner.next();
     StudentRecord record = search(token);
     if (record != null) {
       System.out.println("Got record");
-      System.out.println("Last: "+ record.lastName + ", First: " + record.firstName + ", ID: " + record.id);
+      System.out.println("Last: " + record.lastName + ", First: " + record.firstName + ", ID: " + record.id);
     } else {
       System.out.println("ID not found");
     }
   }
 
-  /* 
-   * Interactive functions called by the driver program to list all database
-   * items is various different ways (ascending and descending lists sorted
-   * by each of the three possible fields.
-  */
+  /*
+   * Interactive functions called by the driver program to list all database items
+   * is various different ways (ascending and descending lists sorted by each of
+   * the three possible fields.
+   */
   public void ListByIDAscending() {
     System.out.println("Listing entire database in ascending order by ID...");
     listAscending(idIndex);
@@ -170,23 +171,23 @@ public class DataBase {
     listDescending(lastNameIndex);
   }
 
-  private void listAscending(OrderedArray array) {
-    array.iteratorInitFront();
-    while (array.hasNext()) {
-      printEntry(array.getNext());
+  private void listAscending(OrderedList<IndexRecord<String>> list) {
+    list.iteratorInitFront();
+    while (list.hasNext()) {
+      printEntry(list.getNext());
     }
   }
 
-  private void listDescending(OrderedArray array) {
-    array.iteratorInitBack();
-    while (array.hasPrevious()) {
-      printEntry(array.getPrevious());
+  private void listDescending(OrderedList<IndexRecord<String>> List) {
+    List.iteratorInitBack();
+    while (List.hasPrevious()) {
+      printEntry(List.getPrevious());
     }
   }
 
   // Helper function to print a single database entry
   private void printEntry(int location) {
     StudentRecord record = databaseArray[location];
-    System.out.println("Last: "+ record.lastName + ", First: " + record.firstName + ", ID: " + record.id);
+    System.out.println("Last: " + record.lastName + ", First: " + record.firstName + ", ID: " + record.id);
   }
 }

@@ -1,37 +1,42 @@
 package edu.lucyawrey.student_database;
 
 // Ordered linked list used for database indexes
-public class OrderedList {
-  private Node<IndexRecord<String>> first, last, rover, iterator;
+public class OrderedList<T extends Comparable<T>> {
+  private Node<IndexRecord<T>> first, last, rover, iterator;
 
-  public void insert(IndexRecord<String> newRecord) {
-    Node<IndexRecord<String>> newNode = new Node<IndexRecord<String>>(newRecord);
+  public void insert(IndexRecord<T> newRecord) {
+    Node<IndexRecord<T>> newNode = new Node<IndexRecord<T>>(newRecord);
     if (first == null) {
       first = newNode;
       last = newNode;
-      iterator = newNode;
-      return;
-    }
-
-    rover = first;
-    while (rover != null) {
-      int comp = newRecord.compareTo(rover.value);
-      if (comp > 0) {
-        rover = rover.next;
-        continue;
-      } else {
-        rover.prev.next = newNode;
-        newNode.prev = rover.prev;
-        rover.prev = newNode;
-        newNode.next = rover;
-        return;
+    } else if (first.value.compareTo(newNode.value) > 0) {
+      newNode.next = first;
+      newNode.next.prev = newNode;
+      first = newNode;
+    } else {
+      rover = first;
+      while (rover.next != null) {
+        if (rover.next.value.compareTo(newNode.value) < 0) {
+          rover = rover.next;
+          continue;
+        } else {
+          newNode.next = rover.next;
+          if (rover.next != null) {
+            newNode.next.prev = newNode;
+          } else {
+            last = newNode;
+          }
+          rover.next = newNode;
+          newNode.prev = rover;
+          return;
+        }
       }
     }
   }
 
   // Delete an element from the array and shift all elments back by one
-  public void delete(String key) {
-    Node<IndexRecord<String>> node = search(key);
+  public void delete(T key) {
+    Node<IndexRecord<T>> node = search(key);
     if (node == last) {
       last = node.prev;
       last.next = null;
@@ -42,10 +47,10 @@ public class OrderedList {
   }
 
   // Do a linear search through the ordered list
-  public Node<IndexRecord<String>> search(String key) {
+  public Node<IndexRecord<T>> search(T key) {
     rover = first;
     while (rover != null) {
-      if (rover.value.key == key) {
+      if (rover.value.key.equals(key)) {
         return rover;
       }
       rover = rover.next;
@@ -54,8 +59,8 @@ public class OrderedList {
   }
 
   // Get the value of the index record found using search
-  public int getValue(String key) {
-    Node<IndexRecord<String>> node = search(key);
+  public int getValue(T key) {
+    Node<IndexRecord<T>> node = search(key);
     if (node != null) {
       return node.value.location;
     } else {
@@ -65,7 +70,7 @@ public class OrderedList {
 
   // Checks if the array contains a specific key by doing a search and making sure
   // it returns a result
-  public boolean containsKey(String key) {
+  public boolean containsKey(T key) {
     return (search(key) != null);
   }
 

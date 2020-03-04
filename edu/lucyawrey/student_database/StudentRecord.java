@@ -6,11 +6,11 @@ package edu.lucyawrey.student_database;
  * and setters are overkill for what is essentially a simple struct.
  */
 public class StudentRecord {
-  public String id;
+  public int id;
   public String firstName;
   public String lastName;
 
-  public StudentRecord(String id, String firstName, String lastName) {
+  public StudentRecord(int id, String firstName, String lastName) {
     this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;

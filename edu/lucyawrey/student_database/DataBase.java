@@ -7,11 +7,12 @@ import java.util.Scanner;
 public class DataBase {
   private int insertPointer;
   private StudentRecord[] databaseArray;
-  private OrderedList idIndex, firstNameIndex, lastNameIndex;
+  private OrderedList<Integer> idIndex; 
+  private OrderedList<String> firstNameIndex, lastNameIndex;
   private Stack<Integer> deleteStack;
   private Scanner scanner;
 
-  // Default constructor passes default size to main constructor.
+  // Default constructor passes default size to main constructor.               
   public DataBase() {
     this(200);
   }
@@ -21,9 +22,9 @@ public class DataBase {
   public DataBase(int size) {
     insertPointer = 0;
     databaseArray = new StudentRecord[size];
-    idIndex = new OrderedList();
-    firstNameIndex = new OrderedList();
-    lastNameIndex = new OrderedList();
+    idIndex = new OrderedList<Integer>();
+    firstNameIndex = new OrderedList<String>();
+    lastNameIndex = new OrderedList<String>();
     deleteStack = new Stack<Integer>();
     scanner = new Scanner(System.in);
 
@@ -34,8 +35,8 @@ public class DataBase {
       while (fileIn.hasNextLine()) {
         String line = fileIn.nextLine();
         String[] tokens = line.split(" ");
-        databaseArray[i] = new StudentRecord(tokens[2], tokens[1], tokens[0]);
-        idIndex.insert(new IndexRecord<String>(tokens[2], i));
+        databaseArray[i] = new StudentRecord(Integer.parseInt(tokens[2]), tokens[1], tokens[0]);
+        idIndex.insert(new IndexRecord<Integer>(Integer.parseInt(tokens[2]), i));
         firstNameIndex.insert(new IndexRecord<String>(tokens[1], i));
         lastNameIndex.insert(new IndexRecord<String>(tokens[0], i));
         i++;
@@ -49,7 +50,7 @@ public class DataBase {
   }
 
   // Inserts a new database item. The item is only added if it has a unique key.
-  public boolean insert(String id, String firstName, String lastName) {
+  public boolean insert(int id, String firstName, String lastName) {
     if (idIndex.containsKey(id)) {
       return false;
     }
@@ -64,7 +65,7 @@ public class DataBase {
     databaseArray[location] = new StudentRecord(id, firstName, lastName);
 
     // Adds new item to each of the indexes
-    idIndex.insert(new IndexRecord<String>(id, location));
+    idIndex.insert(new IndexRecord<Integer>(id, location));
     firstNameIndex.insert(new IndexRecord<String>(firstName, location));
     lastNameIndex.insert(new IndexRecord<String>(lastName, location));
 
@@ -72,7 +73,7 @@ public class DataBase {
   }
 
   // Search for and return a student record by ID
-  public StudentRecord search(String id) {
+  public StudentRecord search(int id) {
     int location = idIndex.getValue(id);
     if (location != -1) {
       return databaseArray[location];
@@ -83,7 +84,7 @@ public class DataBase {
 
   // Delete a student record by removing it from the indexes and adding its
   // location to the delete stack
-  public boolean delete(String id) {
+  public boolean delete(int id) {
     int location = idIndex.getValue(id);
     if (location != -1) {
       StudentRecord record = databaseArray[location];
@@ -102,7 +103,7 @@ public class DataBase {
     System.out.println("Enter student record in the format '{lastName} {firstName} {id}'");
     String line = scanner.nextLine();
     String[] tokens = line.split(" ");
-    boolean success = insert(tokens[2], tokens[1], tokens[0]);
+    boolean success = insert(Integer.parseInt(tokens[2]), tokens[1], tokens[0]);
     if (success) {
       System.out.println("Added student record");
     } else {
@@ -113,7 +114,7 @@ public class DataBase {
   // Interactive function called by the driver program to delete a database items
   public void deleteIt() {
     System.out.println("Enter ID of record to delete:");
-    String token = scanner.next();
+    int token = scanner.nextInt();
     boolean success = delete(token);
     if (success) {
       System.out.println("Deleted");
@@ -126,7 +127,7 @@ public class DataBase {
   // item by ID
   public void findIt() {
     System.out.println("Enter ID of record to look up:");
-    String token = scanner.next();
+    int token = scanner.nextInt();
     StudentRecord record = search(token);
     if (record != null) {
       System.out.println("Got record");
@@ -171,14 +172,14 @@ public class DataBase {
     listDescending(lastNameIndex);
   }
 
-  private void listAscending(OrderedList list) {
+  private <T extends Comparable<T>> void listAscending(OrderedList<T> list) {
     list.iteratorInitFront();
     while (list.hasNext()) {
       printEntry(list.getNext());
     }
   }
 
-  private void listDescending(OrderedList List) {
+  private <T extends Comparable<T>> void listDescending(OrderedList<T> List) {
     List.iteratorInitBack();
     while (List.hasPrevious()) {
       printEntry(List.getPrevious());

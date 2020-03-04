@@ -1,21 +1,14 @@
 package edu.lucyawrey.student_database;
 
-// Ordered array used for database indexes
-public class OrderedArray {
-  private IndexRecord[] array;
-  private int last;
-  private int iterator;
+// Ordered linked list used for database indexes
+public class OrderedList<T extends Comparable<T>> {
+  private Node<T> first, last, rover;
 
-  public OrderedArray(int size) {
-    array = new IndexRecord[size];
-    last = -1;
-    iterator = 0;
-  }
-
-  public void insert(IndexRecord newRecord) {
-    if (last == -1) {
-      array[0] = newRecord;
-      last++;
+  public void insert(T newRecord) {
+    if (first == null) {
+      first = new Node<T>(newRecord);
+      last = first;
+      rover = first;
       return;
     }
 
@@ -45,12 +38,12 @@ public class OrderedArray {
   public int search(String key) {
     int start = 0;
     int end = last;
-    while(start <= end) {
+    while (start <= end) {
       int mid = 1 + (end - start) / 2;
       int comp = key.compareTo(array[mid].key);
       if (comp == 0) {
         return mid;
-      } else if (comp > 0){
+      } else if (comp > 0) {
         start = mid + 1;
       } else if (comp < 0) {
         end = mid - 1;

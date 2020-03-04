@@ -1,30 +1,32 @@
 package edu.lucyawrey.student_database;
 
 // Stack used for storing free locations in the database array
-public class Stack {
-  private int[] stackArray;
-  private int stackPointer;
+public class Stack<T> {
+  private Node<T> top;
 
-  public Stack(int size) {
-    stackArray = new int[size];
-    stackPointer = 0;
+  public void push(T newValue) {
+    Node<T> newNode = new Node<T>(newValue);
+    if (top == null) {
+      top = newNode;
+      return;
+    }
+
+    newNode.prev = top;
+    top.next = newNode;
+    top = newNode;
   }
 
-  public void push(int newValue) {
-    stackArray[stackPointer] = newValue;
-    stackPointer++;
+  public T pop() {
+    T pop = top.value;
+    top = top.prev;
+    return pop;
   }
 
-  public int pop() {
-    stackPointer--;
-    return stackArray[stackPointer];
-  }
-
-  public int peek() {
-    return stackArray[stackPointer - 1];
+  public T peek() {
+    return top.value;
   }
 
   public boolean hasNext() {
-    return (stackPointer > 0);
+    return (top != null);
   }
 }
